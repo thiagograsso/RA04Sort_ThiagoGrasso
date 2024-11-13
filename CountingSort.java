@@ -48,7 +48,8 @@ public class CountingSort {
 
     public static void preencherVetorAleatoriamente(int[] vetor, long seed) {
         Random random = new Random(seed);
-        for (int i = 0; i < vetor.length; i++) {
+        int tamanho = vetor.length;
+        for (int i = 0; i < tamanho; i++) {
             vetor[i] = random.nextInt(1000000); // Gera um número inteiro aleatório positivo até 1.000.000
         }
     }
@@ -57,27 +58,28 @@ public class CountingSort {
         int max = findMax(array);
         int min = findMin(array);
         int range = max - min + 1;
+        int tamanho = array.length;
 
         int[] count = new int[range];
-        int[] output = new int[array.length];
+        int[] output = new int[tamanho];
 
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < tamanho; i++) {
             count[array[i] - min]++;
             numIteracoes++;
         }
 
-        for (int i = 1; i < count.length; i++) {
+        for (int i = 1; i < range; i++) {
             count[i] += count[i - 1];
             numIteracoes++;
         }
 
-        for (int i = array.length - 1; i >= 0; i--) {
+        for (int i = tamanho - 1; i >= 0; i--) {
             output[count[array[i] - min] - 1] = array[i];
             count[array[i] - min]--;
             numIteracoes++;
         }
 
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < tamanho; i++) {
             array[i] = output[i];
             numIteracoes++;
         }
@@ -85,7 +87,8 @@ public class CountingSort {
 
     public static int findMax(int[] array) {
         int max = array[0];
-        for (int i = 1; i < array.length; i++) {
+        int tamanho = array.length;
+        for (int i = 1; i < tamanho; i++) {
             if (array[i] > max) {
                 max = array[i];
             }
@@ -96,7 +99,8 @@ public class CountingSort {
 
     public static int findMin(int[] array) {
         int min = array[0];
-        for (int i = 1; i < array.length; i++) {
+        int tamanho = array.length;
+        for (int i = 1; i < tamanho; i++) {
             if (array[i] < min) {
                 min = array[i];
             }
