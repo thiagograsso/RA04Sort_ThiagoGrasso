@@ -9,10 +9,10 @@ public class CountingSort {
     public static void main(String[] args) {
         int[] tamanhos = {1000, 10000, 100000, 500000, 1000000};
         int rodadas = 5;
-        long seed = 42; // Semente fixa para replicabilidade
+        long seed = 42;
 
         try (FileWriter writer = new FileWriter("resultados_counting_sort.csv")) {
-            writer.append("Tamanho,TempoMedio,TrocasMedias,IteracoesMedias\n");
+            writer.append("Tamanho,Rodada,Tempo,Trocas,Iteracoes\n");
 
             for (int tamanho : tamanhos) {
                 long tempoTotal = 0;
@@ -21,44 +21,45 @@ public class CountingSort {
 
                 for (int i = 0; i < rodadas; i++) {
                     int[] array = new int[tamanho];
-                    preencherVetorAleatoriamente(array, seed + i); // Variar a semente para cada rodada
+                    preencherVetorAleatoriamente(array, tamanho, seed + i);
 
                     numTrocas = 0;
                     numIteracoes = 0;
 
                     long inicio = System.nanoTime();
-                    countingSort(array);
+                    countingSort(array, tamanho);
                     long fim = System.nanoTime();
 
-                    tempoTotal += (fim - inicio);
+                    long tempo = fim - inicio;
+                    tempoTotal += tempo;
                     trocasTotais += numTrocas;
                     iteracoesTotais += numIteracoes;
+
+                    writer.append(tamanho + "," + (i + 1) + "," + tempo + "," + numTrocas + "," + numIteracoes + "\n");
                 }
 
                 long tempoMedio = tempoTotal / rodadas;
                 long trocasMedias = trocasTotais / rodadas;
                 long iteracoesMedias = iteracoesTotais / rodadas;
 
-                writer.append(tamanho + "," + tempoMedio + "," + trocasMedias + "," + iteracoesMedias + "\n");
+                writer.append(tamanho + ",Média," + tempoMedio + "," + trocasMedias + "," + iteracoesMedias + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void preencherVetorAleatoriamente(int[] vetor, long seed) {
+    public static void preencherVetorAleatoriamente(int[] vetor, int tamanho, long seed) {
         Random random = new Random(seed);
-        int tamanho = vetor.length;
         for (int i = 0; i < tamanho; i++) {
-            vetor[i] = random.nextInt(1000000); // Gera um número inteiro aleatório positivo até 1.000.000
+            vetor[i] = random.nextInt(1000000);
         }
     }
 
-    public static void countingSort(int[] array) {
-        int max = findMax(array);
-        int min = findMin(array);
+    public static void countingSort(int[] array, int tamanho) {
+        int max = findMax(array, tamanho);
+        int min = findMin(array, tamanho);
         int range = max - min + 1;
-        int tamanho = array.length;
 
         int[] count = new int[range];
         int[] output = new int[tamanho];
@@ -85,9 +86,8 @@ public class CountingSort {
         }
     }
 
-    public static int findMax(int[] array) {
+    public static int findMax(int[] array, int tamanho) {
         int max = array[0];
-        int tamanho = array.length;
         for (int i = 1; i < tamanho; i++) {
             if (array[i] > max) {
                 max = array[i];
@@ -97,9 +97,8 @@ public class CountingSort {
         return max;
     }
 
-    public static int findMin(int[] array) {
+    public static int findMin(int[] array, int tamanho) {
         int min = array[0];
-        int tamanho = array.length;
         for (int i = 1; i < tamanho; i++) {
             if (array[i] < min) {
                 min = array[i];
