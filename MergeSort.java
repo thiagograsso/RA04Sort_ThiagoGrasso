@@ -27,7 +27,7 @@ public class MergeSort {
                     numIteracoes = 0;
 
                     long inicio = System.nanoTime();
-                    mergeSort(array, 0, array.length - 1);
+                    mergeSort(array, 0, tamanho - 1);
                     long fim = System.nanoTime();
 
                     tempoTotal += (fim - inicio);
@@ -48,7 +48,8 @@ public class MergeSort {
 
     public static void preencherVetorAleatoriamente(int[] vetor, long seed) {
         Random random = new Random(seed);
-        for (int i = 0; i < vetor.length; i++) {
+        int tamanho = vetor.length;
+        for (int i = 0; i < tamanho; i++) {
             vetor[i] = random.nextInt(1000000); // Gera um número inteiro aleatório positivo até 1.000.000
         }
     }
