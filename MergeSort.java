@@ -12,7 +12,7 @@ public class MergeSort {
         long seed = 42; // Semente fixa para replicabilidade
 
         try (FileWriter writer = new FileWriter("resultados_merge_sort.csv")) {
-            writer.append("Tamanho,TempoMedio,TrocasMedias,IteracoesMedias\n");
+            writer.append("Tamanho,Rodada,Tempo,Trocas,Iteracoes\n");
 
             for (int tamanho : tamanhos) {
                 long tempoTotal = 0;
@@ -21,7 +21,7 @@ public class MergeSort {
 
                 for (int i = 0; i < rodadas; i++) {
                     int[] array = new int[tamanho];
-                    preencherVetorAleatoriamente(array, seed + i); // Variar a semente para cada rodada
+                    preencherVetorAleatoriamente(array, tamanho, seed + i);
 
                     numTrocas = 0;
                     numIteracoes = 0;
@@ -30,37 +30,37 @@ public class MergeSort {
                     mergeSort(array, 0, tamanho - 1);
                     long fim = System.nanoTime();
 
-                    tempoTotal += (fim - inicio);
+                    long tempo = fim - inicio;
+                    tempoTotal += tempo;
                     trocasTotais += numTrocas;
                     iteracoesTotais += numIteracoes;
+
+                    writer.append(tamanho + "," + (i + 1) + "," + tempo + "," + numTrocas + "," + numIteracoes + "\n");
                 }
 
                 long tempoMedio = tempoTotal / rodadas;
                 long trocasMedias = trocasTotais / rodadas;
                 long iteracoesMedias = iteracoesTotais / rodadas;
 
-                writer.append(tamanho + "," + tempoMedio + "," + trocasMedias + "," + iteracoesMedias + "\n");
+                writer.append(tamanho + ",Média," + tempoMedio + "," + trocasMedias + "," + iteracoesMedias + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void preencherVetorAleatoriamente(int[] vetor, long seed) {
+    public static void preencherVetorAleatoriamente(int[] vetor, int tamanho, long seed) {
         Random random = new Random(seed);
-        int tamanho = vetor.length;
         for (int i = 0; i < tamanho; i++) {
-            vetor[i] = random.nextInt(1000000); // Gera um número inteiro aleatório positivo até 1.000.000
+            vetor[i] = random.nextInt(1000000);
         }
     }
 
     public static void mergeSort(int[] array, int left, int right) {
         if (left < right) {
             int middle = (left + right) / 2;
-
             mergeSort(array, left, middle);
             mergeSort(array, middle + 1, right);
-
             merge(array, left, middle, right);
         }
     }
@@ -72,11 +72,11 @@ public class MergeSort {
         int[] L = new int[n1];
         int[] R = new int[n2];
 
-        for (int i = 0; i < n1; ++i) {
+        for (int i = 0; i < n1; i++) {
             L[i] = array[left + i];
             numIteracoes++;
         }
-        for (int j = 0; j < n2; ++j) {
+        for (int j = 0; j < n2; j++) {
             R[j] = array[middle + 1 + j];
             numIteracoes++;
         }
